@@ -1,96 +1,90 @@
 @model PortalAcademico.Web.Models.ViewModels.CatalogoViewModel
+@{ ViewData["Title"] = "Catálogo de Cursos"; }
 
-@{
-    ViewData["Title"] = "Catálogo de Cursos";
-}
-
-<div class="d-flex justify-content-between align-items-center mb-4">
-    <h1>Catálogo de Cursos</h1>
+<div class="text-center mb-5 mt-4">
+    <h1 class="display-4 fw-bold text-gradient-primary mb-3">Explora tu Futuro</h1>
+    <p class="lead text-muted">Inscríbete en los cursos más demandados y da el siguiente paso en tu carrera profesional.</p>
 </div>
 
-<div class="card mb-4 shadow-sm border-0">
-    <div class="card-body bg-light rounded">
-        <form method="get" asp-action="Index">
-            <h5 class="card-title mb-3 text-secondary"><i class="bi bi-funnel"></i> Filtros de Búsqueda</h5>
-            <div class="row g-3">
-                <div class="col-md-3">
-                    <label asp-for="Filtros.Nombre" class="form-label fw-bold"></label>
-                    <input asp-for="Filtros.Nombre" class="form-control" placeholder="Ej. Programación..." />
-                </div>
-                <div class="col-md-2">
-                    <label asp-for="Filtros.MinCreditos" class="form-label fw-bold"></label>
-                    <input asp-for="Filtros.MinCreditos" class="form-control" type="number" />
-                </div>
-                <div class="col-md-2">
-                    <label asp-for="Filtros.MaxCreditos" class="form-label fw-bold"></label>
-                    <input asp-for="Filtros.MaxCreditos" class="form-control" type="number" />
-                </div>
-                <div class="col-md-2">
-                    <label asp-for="Filtros.HorarioInicio" class="form-label fw-bold"></label>
-                    <input asp-for="Filtros.HorarioInicio" class="form-control" type="time" />
-                </div>
-                <div class="col-md-2">
-                    <label asp-for="Filtros.HorarioFin" class="form-label fw-bold"></label>
-                    <input asp-for="Filtros.HorarioFin" class="form-control" type="time" />
-                </div>
-                <div class="col-md-1 d-flex align-items-end">
-                    <button type="submit" class="btn btn-primary w-100">Buscar</button>
+<div class="card shadow-sm border-0 mb-5 rounded-4 overflow-hidden">
+    <div class="card-header bg-white p-4 border-bottom-0">
+        <h5 class="fw-bold mb-0 text-secondary"><i class="bi bi-funnel-fill me-2 text-primary"></i> Filtros de Búsqueda</h5>
+    </div>
+    <div class="card-body bg-light p-4">
+        <form method="get" class="row g-3 align-items-end">
+            <div class="col-md-3">
+                <label class="form-label fw-medium text-muted">Nombre del Curso</label>
+                <div class="input-group">
+                    <span class="input-group-text bg-white border-end-0"><i class="bi bi-search"></i></span>
+                    <input type="text" asp-for="Filtros.Nombre" class="form-control form-control-modern border-start-0" placeholder="Ej. Matemáticas">
                 </div>
             </div>
-            
-            @if (!ViewData.ModelState.IsValid)
-            {
-                <div class="alert alert-danger mt-3 mb-0">
-                    <div asp-validation-summary="All" class="text-danger mb-0"></div>
-                </div>
-            }
+            <div class="col-md-2">
+                <label class="form-label fw-medium text-muted">Créditos Mínimos</label>
+                <input type="number" asp-for="Filtros.CreditosMinimos" class="form-control form-control-modern">
+                <span asp-validation-for="Filtros.CreditosMinimos" class="text-danger small"></span>
+            </div>
+            <div class="col-md-2">
+                <label class="form-label fw-medium text-muted">Hora Inicio (Desde)</label>
+                <input type="time" asp-for="Filtros.HorarioInicio" class="form-control form-control-modern">
+            </div>
+            <div class="col-md-2">
+                <label class="form-label fw-medium text-muted">Hora Fin (Hasta)</label>
+                <input type="time" asp-for="Filtros.HorarioFin" class="form-control form-control-modern">
+                <span asp-validation-for="Filtros" class="text-danger small"></span>
+            </div>
+            <div class="col-md-3 d-grid gap-2 d-md-flex justify-content-md-end">
+                <button type="submit" class="btn btn-primary btn-modern px-4 w-100">Filtrar</button>
+                <a asp-action="Index" class="btn btn-light btn-modern w-100 text-muted border">Limpiar</a>
+            </div>
         </form>
     </div>
 </div>
 
-<div class="row row-cols-1 row-cols-md-3 g-4">
-    @if (Model.Cursos.Any())
+<div class="row g-4">
+    @if (!Model.Cursos.Any())
+    {
+        <div class="col-12 text-center py-5">
+            <div class="display-1 text-muted opacity-25 mb-3"><i class="bi bi-journal-x"></i></div>
+            <h3 class="text-muted">No encontramos cursos con esos filtros.</h3>
+            <p>Intenta ajustar tu búsqueda para ver más resultados.</p>
+        </div>
+    }
+    else
     {
         @foreach (var curso in Model.Cursos)
         {
-            <div class="col">
-                <div class="card h-100 shadow-sm hover-effect">
-                    <div class="card-header bg-dark text-white d-flex justify-content-between align-items-center">
-                        <h5 class="mb-0">@curso.Codigo</h5>
-                        <span class="badge bg-secondary">@curso.Creditos Cr.</span>
+            <div class="col-md-6 col-lg-4">
+                <div class="card h-100 course-card">
+                    <div class="card-header bg-transparent border-0 pt-4 pb-0 d-flex justify-content-between align-items-center">
+                        <span class="badge bg-primary bg-opacity-10 text-primary px-3 py-2 rounded-pill fw-bold fs-6">
+                            @curso.Codigo
+                        </span>
+                        <span class="text-muted fw-bold"><i class="bi bi-star-fill text-warning me-1"></i> @curso.Creditos Cr.</span>
                     </div>
                     <div class="card-body">
-                        <h5 class="card-title text-primary">@curso.Nombre</h5>
-                        <hr />
-                        <p class="card-text mb-2">
-                            <strong><i class="bi bi-clock text-info"></i> Horario:</strong><br />
-                            @curso.HorarioInicio.ToString(@"hh\:mm") - @curso.HorarioFin.ToString(@"hh\:mm")
-                        </p>
-                        <p class="card-text mb-0 text-muted small">
-                            <strong>Cupo Máximo:</strong> @curso.CupoMaximo estudiantes
-                        </p>
+                        <h4 class="card-title fw-bold mb-3">@curso.Nombre</h4>
+                        
+                        <div class="d-flex align-items-center mb-2 text-secondary">
+                            <i class="bi bi-clock-history me-2 fs-5"></i>
+                            <span>@curso.HorarioInicio.ToString(@"hh\:mm") - @curso.HorarioFin.ToString(@"hh\:mm")</span>
+                        </div>
+                        <div class="d-flex align-items-center text-secondary mb-4">
+                            <i class="bi bi-people-fill me-2 fs-5"></i>
+                            <span>Cupo Máximo: @curso.CupoMaximo estudiantes</span>
+                        </div>
                     </div>
-                    <div class="card-footer bg-transparent border-top-0 pt-0 pb-3 text-center">
-                        <a asp-action="Details" asp-route-id="@curso.Id" class="btn btn-outline-primary px-4 rounded-pill">Ver Detalles</a>
+                    <div class="card-footer bg-transparent border-0 pb-4 pt-0">
+                        <a asp-action="Details" asp-route-id="@curso.Id" class="btn btn-outline-primary w-100 btn-modern fw-bold">
+                            Ver Detalles e Inscribirse <i class="bi bi-arrow-right ms-1"></i>
+                        </a>
                     </div>
                 </div>
             </div>
         }
     }
-    else if (ViewData.ModelState.IsValid)
-    {
-        <div class="col-12">
-            <div class="alert alert-info shadow-sm text-center">
-                No se encontraron cursos que coincidan con los filtros de búsqueda proporcionados.
-            </div>
-        </div>
-    }
 </div>
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
-    <style>
-        .hover-effect { transition: transform 0.2s ease-in-out; }
-        .hover-effect:hover { transform: translateY(-5px); box-shadow: 0 10px 20px rgba(0,0,0,0.1) !important; }
-    </style>
 }
